@@ -1,0 +1,1046 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Archie — Discovery Report · March 2026</title>
+<style>
+  :root {
+    --bg: #f7f8fa;
+    --surface: #ffffff;
+    --border: #e4e7ed;
+    --text: #1a1d23;
+    --muted: #6b7280;
+    --accent: #5b4bdb;
+    --accent-light: #ede9ff;
+    --red: #dc2626;
+    --red-light: #fee2e2;
+    --amber: #d97706;
+    --amber-light: #fef3c7;
+    --green: #16a34a;
+    --green-light: #dcfce7;
+    --blue: #2563eb;
+    --blue-light: #dbeafe;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
+
+  /* NAV */
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    background: var(--surface); border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; gap: 0; padding: 0 24px;
+    box-shadow: 0 1px 4px rgba(0,0,0,.06);
+  }
+  .nav-brand { font-weight: 700; font-size: 15px; color: var(--accent); padding: 16px 24px 16px 0; border-right: 1px solid var(--border); margin-right: 16px; white-space: nowrap; }
+  .nav-tabs { display: flex; gap: 2px; }
+  .nav-tab {
+    padding: 16px 18px; font-size: 13px; font-weight: 500; color: var(--muted);
+    cursor: pointer; border-bottom: 2px solid transparent; transition: all .15s; white-space: nowrap;
+    background: none; border-top: none; border-left: none; border-right: none;
+  }
+  .nav-tab:hover { color: var(--accent); }
+  .nav-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+  .nav-date { margin-left: auto; font-size: 12px; color: var(--muted); white-space: nowrap; }
+
+  /* LAYOUT */
+  .page { display: none; max-width: 960px; margin: 0 auto; padding: 40px 24px 80px; }
+  .page.active { display: block; }
+
+  /* HERO */
+  .hero { background: linear-gradient(135deg, #5b4bdb 0%, #7c3aed 100%); color: #fff; border-radius: 12px; padding: 36px 40px; margin-bottom: 32px; }
+  .hero h1 { font-size: 26px; font-weight: 700; margin-bottom: 8px; }
+  .hero p { font-size: 15px; opacity: .85; max-width: 600px; }
+  .hero-meta { display: flex; gap: 24px; margin-top: 20px; flex-wrap: wrap; }
+  .hero-stat { display: flex; flex-direction: column; }
+  .hero-stat span:first-child { font-size: 22px; font-weight: 700; }
+  .hero-stat span:last-child { font-size: 12px; opacity: .7; text-transform: uppercase; letter-spacing: .05em; }
+
+  /* SECTION */
+  .section { margin-bottom: 32px; }
+  .section-title { font-size: 18px; font-weight: 700; margin-bottom: 16px; display: flex; align-items: center; gap: 10px; }
+  .section-title .icon { width: 28px; height: 28px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 14px; }
+
+  /* CARD */
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 24px; margin-bottom: 16px; }
+  .card-title { font-size: 15px; font-weight: 700; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+  .card p { font-size: 14px; color: var(--muted); line-height: 1.65; }
+  .card ul { margin: 10px 0 0 18px; font-size: 14px; color: #374151; }
+  .card ul li { margin-bottom: 5px; }
+
+  /* BADGE */
+  .badge { display: inline-flex; align-items: center; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; letter-spacing: .03em; text-transform: uppercase; }
+  .badge-red    { background: var(--red-light);   color: var(--red);   }
+  .badge-amber  { background: var(--amber-light); color: var(--amber); }
+  .badge-green  { background: var(--green-light); color: var(--green); }
+  .badge-blue   { background: var(--blue-light);  color: var(--blue);  }
+  .badge-purple { background: var(--accent-light); color: var(--accent); }
+  .badge-gray   { background: #f3f4f6; color: #6b7280; }
+
+  /* PRIORITY GROUP */
+  .priority-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); margin: 28px 0 12px; display: flex; align-items: center; gap: 8px; }
+  .priority-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+  /* THEME TABLE */
+  table { width: 100%; border-collapse: collapse; font-size: 13px; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
+  th { background: #f9fafb; padding: 10px 14px; text-align: left; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); border-bottom: 1px solid var(--border); }
+  td { padding: 11px 14px; border-bottom: 1px solid #f0f0f0; vertical-align: top; }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: #fafafa; }
+
+  /* IDEAS GRID */
+  .ideas-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 14px; }
+  .idea-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 18px; }
+  .idea-card .idea-num { font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase; margin-bottom: 6px; }
+  .idea-card .idea-name { font-size: 14px; font-weight: 700; margin-bottom: 8px; }
+  .idea-card .idea-desc { font-size: 13px; color: var(--muted); line-height: 1.6; }
+  .idea-card .idea-meta { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
+
+  /* TOP 5 */
+  .top5-item { display: flex; gap: 16px; align-items: flex-start; padding: 16px; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; margin-bottom: 10px; }
+  .top5-rank { width: 32px; height: 32px; background: var(--accent); color: #fff; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 800; flex-shrink: 0; }
+  .top5-body { flex: 1; }
+  .top5-body strong { font-size: 14px; display: block; margin-bottom: 4px; }
+  .top5-body span { font-size: 13px; color: var(--muted); }
+
+  /* ASSUMPTIONS */
+  .assumption-item { padding: 14px 16px; border-radius: 8px; margin-bottom: 10px; border-left: 3px solid; }
+  .assumption-item.high   { background: var(--red-light);   border-color: var(--red); }
+  .assumption-item.medium { background: var(--amber-light); border-color: var(--amber); }
+  .assumption-item.low    { background: var(--green-light); border-color: var(--green); }
+  .assumption-text { font-size: 14px; font-weight: 500; }
+  .assumption-meta { font-size: 12px; color: var(--muted); margin-top: 4px; }
+
+  /* EXPERIMENTS */
+  .exp-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; margin-bottom: 14px; overflow: hidden; }
+  .exp-header { display: flex; align-items: center; gap: 12px; padding: 16px 20px; cursor: pointer; border-bottom: 1px solid transparent; }
+  .exp-header:hover { background: #fafafa; }
+  .exp-code { width: 36px; height: 36px; border-radius: 8px; background: var(--accent-light); color: var(--accent); display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 13px; flex-shrink: 0; }
+  .exp-header-body { flex: 1; }
+  .exp-header-body strong { font-size: 14px; display: block; }
+  .exp-header-body span { font-size: 12px; color: var(--muted); }
+  .exp-header .chevron { font-size: 12px; color: var(--muted); transition: transform .2s; }
+  .exp-card.open .exp-header { border-bottom-color: var(--border); }
+  .exp-card.open .chevron { transform: rotate(180deg); }
+  .exp-body { display: none; padding: 20px; font-size: 14px; color: #374151; line-height: 1.7; }
+  .exp-card.open .exp-body { display: block; }
+  .exp-body h4 { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); margin: 14px 0 6px; }
+  .exp-body h4:first-child { margin-top: 0; }
+  .exp-body ul { padding-left: 16px; }
+  .exp-body li { margin-bottom: 5px; }
+
+  /* TIMELINE */
+  .timeline { display: flex; gap: 12px; }
+  .timeline-week { flex: 1; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 16px; }
+  .timeline-week .week-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--accent); margin-bottom: 10px; }
+  .timeline-week p { font-size: 13px; color: var(--muted); line-height: 1.6; }
+
+  /* DECISION TABLE */
+  .decision-row { display: flex; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--border); font-size: 14px; }
+  .decision-row:last-child { border-bottom: none; }
+  .decision-if { flex: 1; color: var(--muted); }
+  .decision-then { flex: 1; color: var(--text); font-weight: 500; }
+
+  /* INSIGHT CARDS */
+  .insight-list { display: flex; flex-direction: column; gap: 10px; }
+  .insight-item { display: flex; gap: 14px; align-items: flex-start; padding: 14px 16px; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; }
+  .insight-num { width: 24px; height: 24px; background: var(--accent); color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; flex-shrink: 0; margin-top: 1px; }
+  .insight-body { font-size: 14px; line-height: 1.65; }
+  .insight-body strong { color: var(--text); }
+  .insight-body span { color: var(--muted); }
+
+  /* SUB-TABS (within a page) */
+  .sub-nav { display: flex; gap: 6px; margin-bottom: 28px; border-bottom: 1px solid var(--border); padding-bottom: 0; }
+  .sub-tab { padding: 10px 16px; font-size: 13px; font-weight: 500; color: var(--muted); cursor: pointer; border: none; background: none; border-bottom: 2px solid transparent; margin-bottom: -1px; transition: all .15s; border-radius: 0; }
+  .sub-tab:hover { color: var(--accent); }
+  .sub-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+  .sub-page { display: none; }
+  .sub-page.active { display: block; }
+
+  /* HORIZON BADGE */
+  .horizon-tag { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; padding: 4px 12px; border-radius: 20px; margin-bottom: 16px; }
+  .horizon-1 { background: #dbeafe; color: #1d4ed8; }
+  .horizon-2 { background: #ede9ff; color: #5b4bdb; }
+
+  /* COMBINED TOP PICKS */
+  .pick-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 18px 20px; margin-bottom: 12px; display: flex; gap: 16px; align-items: flex-start; }
+  .pick-rank { width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 800; flex-shrink: 0; }
+  .pick-rank.h1 { background: #dbeafe; color: #1d4ed8; }
+  .pick-rank.h2 { background: #ede9ff; color: #5b4bdb; }
+  .pick-body { flex: 1; }
+  .pick-body strong { font-size: 14px; display: block; margin-bottom: 3px; }
+  .pick-body p { font-size: 13px; color: var(--muted); line-height: 1.6; margin: 0; }
+  .pick-meta { display: flex; flex-direction: column; align-items: flex-end; gap: 5px; flex-shrink: 0; }
+
+  /* CARD SECTIONS */
+  .card-section-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); margin: 16px 0 5px; }
+  .src { font-size: 11px; color: var(--accent); text-decoration: none; margin-left: 5px; white-space: nowrap; border-bottom: 1px dashed var(--accent); opacity: .8; }
+  .src:hover { opacity: 1; }
+
+  /* SIGNAL TAGS */
+  .signal-row { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border); }
+  .sig { display: inline-flex; align-items: center; gap: 4px; font-size: 10px; font-weight: 600; padding: 3px 8px; border-radius: 20px; white-space: nowrap; }
+  .sig-user  { background: #fff7ed; color: #c2410c; border: 1px solid #fed7aa; }
+  .sig-c1    { background: #e0f2fe; color: #0369a1; border: 1px solid #bae6fd; }   /* Knowledge & Data */
+  .sig-c2    { background: #dbeafe; color: #1d4ed8; border: 1px solid #bfdbfe; }   /* Model Quality */
+  .sig-c3    { background: #fce7f3; color: #9d174d; border: 1px solid #fbcfe8; }   /* Personality & Voice */
+  .sig-c4    { background: #ede9ff; color: #5b21b6; border: 1px solid #ddd6fe; }   /* Workflow Integration */
+  .sig-c5    { background: #fef3c7; color: #92400e; border: 1px solid #fde68a; }   /* Legal Intelligence */
+  .sig-c6    { background: #dcfce7; color: #166534; border: 1px solid #bbf7d0; }   /* Archie Apps */
+  .sig-c7    { background: #fee2e2; color: #991b1b; border: 1px solid #fecaca; }   /* Autonomous Agents */
+
+  /* RESPONSIVE */
+  @media (max-width: 640px) {
+    .timeline { flex-direction: column; }
+    .ideas-grid { grid-template-columns: 1fr; }
+    .hero { padding: 24px; }
+    .hero h1 { font-size: 20px; }
+    nav { overflow-x: auto; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-brand">⚡ Archie Discovery</div>
+  <div class="nav-tabs">
+    <button class="nav-tab active" onclick="showPage('triage', this)">Triage</button>
+    <button class="nav-tab" onclick="showPage('brainstorm', this)">Brainstorm</button>
+    <button class="nav-tab" onclick="showPage('discover', this)">Discovery Plan</button>
+  </div>
+  <div class="nav-date">March 8, 2026</div>
+</nav>
+
+<!-- ===================== TRIAGE ===================== -->
+<div id="page-triage" class="page active">
+
+  <div class="hero">
+    <h1>Archie — Feature Request Triage</h1>
+    <p>Aggregated from Twine live data (5 weekly runs, Jan 19–Mar 2 2026), Slack, Confluence, and Jira. Twine data refreshed directly from source — previous version used outdated Confluence export.</p>
+    <div class="hero-meta">
+      <div class="hero-stat"><span>60+</span><span>Signals analysed</span></div>
+      <div class="hero-stat"><span>10</span><span>Themes identified</span></div>
+      <div class="hero-stat"><span>83+</span><span>Twine customers</span></div>
+    </div>
+  </div>
+
+  <!-- Theme Summary Table -->
+  <div class="section">
+    <div class="section-title"><span class="icon" style="background:#ede9ff">📊</span> Theme Summary</div>
+    <table>
+      <thead>
+        <tr><th>#</th><th>Theme</th><th>Signals</th><th>Alignment</th><th>Priority</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>1</td><td><strong>Output Reliability & Consistency</strong></td><td>12</td><td><span class="badge badge-green">High</span></td><td><span class="badge badge-red">Act Now</span></td></tr>
+        <tr><td>2</td><td><strong>Bugs & Stability</strong></td><td>8</td><td><span class="badge badge-green">High</span></td><td><span class="badge badge-red">Act Now</span></td></tr>
+        <tr><td>3</td><td><strong>Data Access & Context Gaps</strong></td><td>9</td><td><span class="badge badge-green">High</span></td><td><span class="badge badge-red">Act Now</span></td></tr>
+        <tr><td>4</td><td><strong>Usability, Discoverability & Onboarding</strong></td><td>8</td><td><span class="badge badge-green">High</span></td><td><span class="badge badge-red">Act Now</span></td></tr>
+        <tr><td>5</td><td><strong>Competitive Perception Gap</strong></td><td>7</td><td><span class="badge badge-green">High</span></td><td><span class="badge badge-red">Act Now</span></td></tr>
+        <tr><td>6</td><td><strong>Workflow Integration & AI Actions</strong></td><td>6</td><td><span class="badge badge-green">High</span></td><td><span class="badge badge-amber">Plan Next</span></td></tr>
+        <tr><td>7</td><td><strong>Drafting Quality & Firm Templates</strong></td><td>4</td><td><span class="badge badge-green">High</span></td><td><span class="badge badge-amber">Plan Next</span></td></tr>
+        <tr><td>8</td><td><strong>Specific Capability Gaps</strong></td><td>5</td><td><span class="badge badge-blue">Medium</span></td><td><span class="badge badge-amber">Plan Next</span></td></tr>
+        <tr><td>9</td><td><strong>Audio Transcription</strong></td><td>3</td><td><span class="badge badge-blue">Medium</span></td><td><span class="badge badge-gray">Collect Signal</span></td></tr>
+        <tr><td>10</td><td><strong>Niche / Single-Customer Requests</strong></td><td>2</td><td><span class="badge badge-gray">Low</span></td><td><span class="badge badge-gray">Defer</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Priority 1 -->
+  <div class="section">
+    <div class="priority-label">🔴 Priority 1 — Act Now</div>
+
+    <div class="card">
+      <div class="card-title"><span class="badge badge-red">12 signals</span> Output Reliability & Consistency</div>
+      <div class="card-section-label">What users experience</div>
+      <p>Lawyers run the same prompt twice and get completely different results. Archie summarises 30 memos correctly one day, then randomly skips half of them the next. A paralegal analysing a property matter finds Archie missed the key properties entirely. Users don't know if an output is accurate until they manually check it — which defeats the whole purpose.</p>
+      <div class="card-section-label">Why it blocks growth</div>
+      <p>In legal work, a wrong output isn't just unhelpful — it's a professional liability. When users can't predict Archie's reliability, they use it less, recommend it less, and fall back to manual work. This is the primary ceiling on daily active usage growing from 4K to 8K. No amount of new features fixes this.</p>
+      <div class="card-section-label">Evidence</div>
+      <ul>
+        <li>Same prompt randomly selects which memos to include — paralegals re-run 3+ times within minutes hoping for an acceptable result <a href="https://app.twine.so/artifacts/d_2BGYWTJYHQ8RX9C90A4VZ171B9" class="src" target="_blank">↗ Twine Feb 2</a></li>
+        <li>Knowledge base returns inaccurate, off-base answers — one customer stopped using it entirely after repeated failures <a href="https://app.twine.so/artifacts/d_2BGYWTJYHQ8RX9C90A4VZ171B9" class="src" target="_blank">↗ Twine Feb 2</a></li>
+        <li>Archie fails to identify properties listed in a matter brief — Burch Shepard Family Law (Feb 16) <a href="https://app.twine.so/artifacts/d_4D5KYEXZDP9TV9W7329SCNK9GH?reportThemeId=dt_3MFZPYYM239GHBH85GQW49Z1T3" class="src" target="_blank">↗ Twine Feb 16</a></li>
+        <li>Time constraint instructions in prompts are ignored — a firm specifying date ranges for file reviews gets results that ignore the timeframe <a href="https://app.twine.so/artifacts/d_79MFRBSY7C8FQRKCYB8QHG3JD1" class="src" target="_blank">↗ Twine Feb 9</a></li>
+        <li>Co-Counsel is preferred for complex bank statement analysis in high-asset divorce — customer routes hard analytical work to Co-Counsel because Archie is less reliable for it <a href="https://app.twine.so/artifacts/d_4YF1W1ER0R8T2TP5E1MDBK0XMW?reportThemeId=dt_5M9FQXZJVM9R3AKWSN1TM03TD9" class="src" target="_blank">↗ Twine Feb 23</a></li>
+        <li>AI model versions feel outdated — ChatGPT 4.0 perceived as old, customer notes Gemini 3 is out while Archie still shows Gemini 2.5 <a href="https://app.twine.so/artifacts/d_79MFRBSY7C8FQRKCYB8QHG3JD1" class="src" target="_blank">↗ Twine Feb 9</a></li>
+      </ul>
+      <div style="margin-top:12px"><span class="badge badge-purple">Action: Invest</span> &nbsp; Build evals pipeline to catch regressions · fix memo chunking randomness · add inline citations to outputs · define model version upgrade cadence</div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="badge badge-red">8 signals</span> Bugs & Stability</div>
+      <div class="card-section-label">What users experience</div>
+      <p>Mid-task, things break. The chat history panel disappears without warning and the user is back at a blank screen. They switched the AI model to Gemini last week but it's back to default today. The Archie tab just won't load. These aren't setup issues — they're happening to active users in the middle of real legal work.</p>
+      <div class="card-section-label">Why it blocks growth</div>
+      <p>Bugs in the core workflow destroy trust in what already works, which is worse than a missing feature. Chat history loss is like losing a Word document mid-draft — it's visceral. These failures hit the users with the highest retention value: people who are already invested and using Archie daily.</p>
+      <div class="card-section-label">Evidence</div>
+      <ul>
+        <li>Chat history flashes and disappears when clicking past conversations — user is reset to a blank state with no recovery path; reported across multiple firms <a href="https://app.twine.so/artifacts/d_2BGYWTJYHQ8RX9C90A4VZ171B9" class="src" target="_blank">↗ Twine Feb 2</a> <a href="https://app.slack.com/client/T031QSEEE/C031QSEFA" class="src" target="_blank">↗ Slack #archie-escalations</a></li>
+        <li>AI model preference resets to default after logout — user sets Claude or Gemini, comes back next session and it's gone <a href="https://app.twine.so/calls/call_2KPHDY22328JRVZN44JCXWEZEC/intel/pi_5T1K9AHEDR8SVAXZQYBP24N2KX" class="src" target="_blank">↗ Twine Feb 12</a></li>
+        <li>Archie tab fails to load — user must do a full page refresh to get it back <a href="https://app.twine.so/calls/call_2KPHDY22328JRVZN44JCXWEZEC/intel/pi_50PNFVJWD09MR8C5DBA3G9NRB9" class="src" target="_blank">↗ Twine Feb 12</a></li>
+        <li>File ingestion counter shows the wrong number after upload — creates confusion about what Archie has actually read <a href="https://app.slack.com/client/T031QSEEE/C031QSEFA" class="src" target="_blank">↗ Slack #archie-escalations (BrotmanLaw, Mar 5)</a></li>
+        <li>Archie freezes or stops responding mid-task with no loading indicator or recovery path shown</li>
+      </ul>
+      <div style="margin-top:12px"><span class="badge badge-red">Action: Fix P1</span> &nbsp; Chat history persistence = P1 · model preference persistence = P1 · tab load failure = P1 · instrument real-user monitoring to detect before users escalate</div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="badge badge-red">9 signals</span> Data Access & Context Gaps</div>
+      <div class="card-section-label">What users experience</div>
+      <p>Archie is sold as a Smokeball-native AI, but it can't see most of what's already in Smokeball. Contact cards, internal memos, email attachments, precedent templates — all invisible to Archie. Users have to download files and re-upload them, copy-paste client details manually, or switch to a different tool entirely. The product asks users to bring the context it should already have.</p>
+      <div class="card-section-label">Why it blocks growth</div>
+      <p>The core reason to choose Archie over generic AI tools like ChatGPT is that it knows your matters. When it doesn't, the value proposition collapses. Every data gap is a reason to open a different tool instead. These gaps also hurt in demos — prospects see what Archie <em>can't</em> access and underestimate its value.</p>
+      <div class="card-section-label">Evidence</div>
+      <ul>
+        <li>Archie can't read contact cards inside a matter — users manually copy-paste client details into the chat every time <a href="https://app.twine.so/artifacts/d_2BGYWTJYHQ8RX9C90A4VZ171B9" class="src" target="_blank">↗ Twine Feb 2</a></li>
+        <li>Archie can't access internal memos or precedent templates saved in a matter — lawyers re-upload their own templates each time they need Archie to use them <a href="https://app.twine.so/artifacts/d_2BGYWTJYHQ8RX9C90A4VZ171B9" class="src" target="_blank">↗ Twine Feb 2</a></li>
+        <li>Archie can't read email attachments — users must download every attachment and re-upload it before Archie can analyse it <a href="https://app.twine.so/artifacts/d_79MFRBSY7C8FQRKCYB8QHG3JD1" class="src" target="_blank">↗ Twine Feb 9</a></li>
+        <li>No Eve AI integration — a prospect uses Eve specifically for discovery responses; moving to Smokeball means abandoning the tool they rely on <a href="https://app.twine.so/artifacts/d_6HEP26RNEF85SSNFP6PCCDN9S5" class="src" target="_blank">↗ Twine Mar 2</a></li>
+        <li>Archie is only accessible from the matter screen — not from within Word, where most drafting actually happens (integration described as "coming") <a href="https://app.twine.so/artifacts/d_79MFRBSY7C8FQRKCYB8QHG3JD1" class="src" target="_blank">↗ Twine Feb 9</a></li>
+        <li>Standalone Claude + Midpage seen as more capable for legal research — because it connects to real case law databases that Archie doesn't access <a href="https://app.twine.so/artifacts/d_6HEP26RNEF85SSNFP6PCCDN9S5" class="src" target="_blank">↗ Twine Mar 2</a></li>
+      </ul>
+      <div style="margin-top:12px"><span class="badge badge-purple">Action: Phase it</span> &nbsp; Contact cards + memo access via Agents context retrieval (in current scope) · confirm Word panel delivery date · external legal research = strategic decision needed</div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="badge badge-red">8 signals</span> Usability, Discoverability & Onboarding</div>
+      <div class="card-section-label">What users experience</div>
+      <p>Users either don't know Archie can do something, or they know it exists but can't figure out how. A firm manually reviewed contracts for months without knowing Archie could do it. Another user saved a prompt and couldn't find it again. Prospects ask "what's the difference between Archie and Lawy?" mid-demo and don't get a clear answer from the product. Capabilities that exist go unused.</p>
+      <div class="card-section-label">Why it blocks growth</div>
+      <p>Every feature that isn't discovered has zero impact. Discoverability gaps compound every other investment — improving the bank statement analyser doesn't help if users don't know it exists. This is also an active sales problem: prospects judge Archie's capability by what they can intuitively find during a demo, not by the full feature list.</p>
+      <div class="card-section-label">Evidence</div>
+      <ul>
+        <li>Prompt library is confusing — users can't find prompts they themselves saved, because prompts are scoped by matter type but the product doesn't make this clear <a href="https://app.twine.so/artifacts/d_79MFRBSY7C8FQRKCYB8QHG3JD1" class="src" target="_blank">↗ Twine Feb 9</a> <a href="https://app.twine.so/artifacts/d_4D5KYEXZDP9TV9W7329SCNK9GH?reportThemeId=dt_4GB1YPM8BC8KTS1T0V37C4N69C" class="src" target="_blank">↗ Twine Feb 16</a></li>
+        <li>Archie vs Lawy confusion — during demos, prospects ask "what's the difference between Archie and Lawy?" and "where do we find that?"; the distinction isn't evident from the UI <a href="https://app.twine.so/artifacts/d_52MAQ4T7KV8T9SW08P81WDTD79" class="src" target="_blank">↗ Twine Jan 26</a></li>
+        <li>Contract review capability is unknown to active customers — a firm was manually highlighting and generating letters for months before learning Archie could do it <a href="https://app.twine.so/artifacts/d_4YF1W1ER0R8T2TP5E1MDBK0XMW" class="src" target="_blank">↗ Twine Feb 23</a></li>
+        <li>Document analysis capability doesn't sell itself — it needs a live demo to land; prospects can't infer what Archie can do from browsing the interface <a href="https://app.twine.so/artifacts/d_4D5KYEXZDP9TV9W7329SCNK9GH?reportThemeId=dt_4GB1YPM8BC8KTS1T0V37C4N69C" class="src" target="_blank">↗ Twine Feb 16</a></li>
+        <li>Prompts disappear when switching matter types — users don't know their prompts are matter-type scoped, so they think their saved work is gone <a href="https://app.twine.so/artifacts/d_79MFRBSY7C8FQRKCYB8QHG3JD1" class="src" target="_blank">↗ Twine Feb 9</a></li>
+      </ul>
+      <div style="margin-top:12px"><span class="badge badge-purple">Action: Quick wins</span> &nbsp; Clarify Archie vs Lawy in-product · build matter-type starter prompts · make prompt library searchable · proactively surface contract review to existing users</div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="badge badge-red">7 signals</span> Competitive Perception Gap</div>
+      <div class="card-section-label">What users experience</div>
+      <p>When prospects and customers compare Archie to other AI tools, Archie often loses the comparison — even in areas where it is objectively strong. The gap is concentrated in two specific areas: complex analytical tasks like bank statement analysis for family law, and legal research, where competitors connect directly to case law databases. At the same time, Archie's genuine advantages (pricing, Leap comparison, Clio reliability) frequently don't come up in evaluations.</p>
+      <div class="card-section-label">Why it blocks growth</div>
+      <p>Perception shapes purchase decisions. Even if Archie's output quality improves, it won't win deals if evaluators believe a gap exists that doesn't. The good news: the competitive loss to Co-Counsel is specific and addressable — it's about a narrow task type, not a broad AI quality failure. And Archie has real competitive wins that just aren't landing.</p>
+      <div class="card-section-label">Evidence</div>
+      <ul>
+        <li>Co-Counsel described as "probably a smarter model" — a customer uses both, defaulting to Co-Counsel for bank statement analysis in high-asset divorce cases where precision is critical <a href="https://app.twine.so/artifacts/d_4YF1W1ER0R8T2TP5E1MDBK0XMW?reportThemeId=dt_5M9FQXZJVM9R3AKWSN1TM03TD9" class="src" target="_blank">↗ Twine Feb 23</a></li>
+        <li>Prospects view Archie as inferior to Clio for AI capabilities during product evaluations <a href="https://app.twine.so/artifacts/d_4YF1W1ER0R8T2TP5E1MDBK0XMW?reportThemeId=dt_5M9FQXZJVM9R3AKWSN1TM03TD9" class="src" target="_blank">↗ Twine Feb 23</a></li>
+        <li>No built-in legal research database — Archie requires manual case uploads; competitors with Midpage or Lexis integration have case law at hand without the extra step <a href="https://app.twine.so/artifacts/d_6HEP26RNEF85SSNFP6PCCDN9S5?reportThemeId=dt_51ZECZN3Y88Y9AM7WR8J6SGAB2" class="src" target="_blank">↗ Twine Mar 2</a></li>
+        <li>✅ <strong>Archie wins on pricing</strong> — included with Smokeball at no extra cost; Co-Counsel and Clio charge per-use fees on top of the platform subscription <a href="https://app.twine.so/artifacts/d_6HEP26RNEF85SSNFP6PCCDN9S5" class="src" target="_blank">↗ Twine Mar 2</a></li>
+        <li>✅ <strong>Archie wins vs Leap</strong> — Leap's AI is described as "very basic"; Archie has knowledge sources that Leap doesn't offer at all <a href="https://app.twine.so/artifacts/d_6HEP26RNEF85SSNFP6PCCDN9S5" class="src" target="_blank">↗ Twine Mar 2</a> <a href="https://app.twine.so/calls/call_3S95PF1E6889PSH16V8YN4C8FT/intel/pi_0JTFS79VA79CW9BZC2SZB16C5N" class="src" target="_blank">↗ Twine Feb 11</a></li>
+        <li>✅ <strong>Archie wins vs Clio's reliability</strong> — existing Clio customers describe its AI as producing unreliable outputs; Archie is seen as more dependable by comparison <a href="https://app.twine.so/artifacts/d_52MAQ4T7KV8T9SW08P81WDTD79" class="src" target="_blank">↗ Twine Jan 26</a></li>
+      </ul>
+      <div style="margin-top:12px"><span class="badge badge-purple">Action: Targeted</span> &nbsp; Improve bank statement analysis accuracy · evaluate legal research gap (own vs. partner) · equip sales with clear competitive talking points for pricing and Leap/Clio comparisons</div>
+    </div>
+  </div>
+
+  <!-- Priority 2 -->
+  <div class="section">
+    <div class="priority-label">🟡 Priority 2 — Plan Next</div>
+
+    <div class="card">
+      <div class="card-title"><span class="badge badge-amber">6 signals</span> Workflow Integration & AI Actions</div>
+      <div class="card-section-label">What users want</div>
+      <p>Users want Archie to do things, not just draft text. Auto-generating settlement statements from uploaded search documents, creating calendar events and follow-up tasks from a matter summary, triggering workflows when a matter stage changes. One user said it could "basically replace a paralegal" for routine communications. <a href="https://app.twine.so/artifacts/d_2BGYWTJYHQ8RX9C90A4VZ171B9" class="src" target="_blank">↗ Twine Feb 2</a></p>
+      <div class="card-section-label">Why it's Plan Next, not Act Now</div>
+      <p>This is the highest-potential long-term opportunity — but these same users also struggle with basic reliability and data access issues. Delivering autonomous actions on an unreliable foundation will produce wrong actions, which erodes trust faster than a missing feature. Task/memo creation is already scoped in Spark 2026 Agents initiative.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="badge badge-amber">4 signals</span> Drafting Quality & Firm Templates</div>
+      <div class="card-section-label">What users want</div>
+      <p>Lawyers want Archie to draft in <em>their</em> format and follow their firm's house style — not produce generic AI-formatted documents they have to reformat before sending. Exporting from Lawy legal research currently requires copy-pasting into Word and manually reformatting. <a href="https://app.twine.so/artifacts/d_52MAQ4T7KV8T9SW08P81WDTD79" class="src" target="_blank">↗ Twine Jan 26</a></p>
+      <div class="card-section-label">Status</div>
+      <p>Partially addressed by the Word add-in (track changes, playbooks) in the current sprint. Prompt placeholders and document template integration are in the T3 backlog.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="badge badge-amber">5 signals</span> Specific Capability Gaps</div>
+      <div class="card-section-label">What users want</div>
+      <p>Concrete named use cases from real workflows that Archie can't do today: extracting all transactions over $500 from 5 years of bank statements into a Word table (a task that currently takes a legal assistant "hours and hours" manually); generating Excel spreadsheets (Archie only outputs Word tables); auto-generating settlement statements from uploaded search documents. <a href="https://app.twine.so/artifacts/d_79MFRBSY7C8FQRKCYB8QHG3JD1" class="src" target="_blank">↗ Twine Feb 9</a></p>
+      <div class="card-section-label">Recommended approach</div>
+      <p>Evaluate whether new prompt templates can address the bank statement and settlement use cases before building new export capabilities. Excel export is discrete enough to investigate as a quick win.</p>
+    </div>
+  </div>
+
+  <!-- Priority 3 -->
+  <div class="section">
+    <div class="priority-label">🔵 Priority 3 — Collect More Signal</div>
+    <div class="card">
+      <div class="card-title"><span class="badge badge-blue">3 signals ↑</span> Audio Transcription</div>
+      <div class="card-section-label">What's happening</div>
+      <p>Three consecutive weeks of users expressing strong enthusiasm for audio summarisation — and this feature already exists in Archie. "That's very good. That's the thing I'm looking for." said one prospect unprompted when shown it. <a href="https://app.twine.so/artifacts/d_2BGYWTJYHQ8RX9C90A4VZ171B9" class="src" target="_blank">↗ Twine Feb 2</a></p>
+      <div class="card-section-label">Hypothesis</div>
+      <p>This may be a <strong>discoverability problem, not a build task</strong>. Before investing in expanding the feature, verify whether existing users are being shown it. If the audio summarisation capability isn't being surfaced consistently, making it visible could deliver the same outcome as building something new.</p>
+    </div>
+  </div>
+
+  <!-- Competitive Table -->
+  <div class="section">
+    <div class="section-title"><span class="icon" style="background:#fee2e2">⚔️</span> Competitive Snapshot (Jan–Mar 2026)</div>
+    <table>
+      <thead>
+        <tr><th>Competitor</th><th>Where Archie Loses</th><th>Where Archie Wins</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>Co-Counsel</strong></td><td>Complex analytical tasks — bank statement analysis, high-asset divorce document review</td><td>Pricing (Archie included at no extra cost vs Co-Counsel per-use fees), Smokeball native integration</td></tr>
+        <tr><td><strong>Clio</strong></td><td>Overall AI perception during sales evaluations</td><td>Output reliability — existing Clio AI users describe it as producing unreliable results</td></tr>
+        <tr><td><strong>Leap</strong></td><td>—</td><td>Feature breadth, knowledge sources, AI quality — Leap's AI is described as "very basic" by comparison</td></tr>
+        <tr><td><strong>Eve AI</strong></td><td>Discovery response drafting (Eve is purpose-built for this)</td><td>Smokeball matter integration — Archie works across the full matter lifecycle</td></tr>
+        <tr><td><strong>Claude + Midpage</strong></td><td>Legal research — integrated case law access without manual uploads</td><td>Smokeball context, pricing for Smokeball users who already pay for Archie</td></tr>
+        <tr><td><strong>ProLaw</strong></td><td>—</td><td>Full AI suite — Archie consistently outperforms across all capability areas</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Insights -->
+  <div class="section">
+    <div class="section-title"><span class="icon" style="background:#fef3c7">💡</span> Key Insights</div>
+    <div class="insight-list">
+      <div class="insight-item"><div class="insight-num">1</div><div class="insight-body"><strong>Reliability is the ceiling, not a floor.</strong> <span>Every week of Twine data shows consistency as the top pain cluster. Users don't churn because Archie is missing a feature — they churn because they can't predict when it will work. Fix reliability and every other improvement compounds.</span></div></div>
+      <div class="insight-item"><div class="insight-num">2</div><div class="insight-body"><strong>Archie's data blindness undermines its own positioning.</strong> <span>A Smokeball-native AI that can't see contact cards, memos, or email attachments forces users to manually bridge the gap — defeating the core reason to use it over ChatGPT. Context access is foundational, not a nice-to-have.</span></div></div>
+      <div class="insight-item"><div class="insight-num">3</div><div class="insight-body"><strong>Bugs are hitting the most valuable users.</strong> <span>Chat history loss, model preference reset, and tab failures affect people already invested in Archie — daily users, not new ones. These are retention risks, not activation risks.</span></div></div>
+      <div class="insight-item"><div class="insight-num">4</div><div class="insight-body"><strong>Features that users don't discover don't exist.</strong> <span>Contract review capability, audio summarisation, bank statement analysis — all praised when users find them, all invisible to many who need them. Discoverability is currently costing real deals and real retention.</span></div></div>
+      <div class="insight-item"><div class="insight-num">5</div><div class="insight-body"><strong>The competitive loss to Co-Counsel is specific and winnable.</strong> <span>It's about one task type: complex document analysis in high-asset family law. This is not a broad AI capability failure — it's a targeted accuracy gap that can be attacked directly.</span></div></div>
+      <div class="insight-item"><div class="insight-num">6</div><div class="insight-body"><strong>Archie's real strengths aren't landing in evaluations.</strong> <span>Pricing advantage, Leap comparison, knowledge sources, and Clio reliability superiority are all documented wins — but they're not surfacing when it matters. The product is better than evaluators believe.</span></div></div>
+      <div class="insight-item"><div class="insight-num">7</div><div class="insight-body"><strong>Growing enthusiasm for audio transcription may just need a discoverability fix.</strong> <span>Three consecutive weeks of unprompted excitement for a feature that already exists. Before building more, verify whether users are being shown it at all.</span></div></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ===================== BRAINSTORM ===================== -->
+<div id="page-brainstorm" class="page">
+
+  <div class="hero">
+    <h1>Brainstorm — Archie Product Ideas</h1>
+    <p>30 ideas across reliability, transparency, context, activation, and agentic capabilities — unified and prioritised together. <span style="background:#dbeafe;color:#1d4ed8;padding:1px 8px;border-radius:4px;font-size:12px;font-weight:600">H1</span> fixes the foundation. <span style="background:#ede9ff;color:#5b4bdb;padding:1px 8px;border-radius:4px;font-size:12px;font-weight:600">H2</span> expands what Archie becomes.</p>
+    <div class="hero-meta">
+      <div class="hero-stat"><span>30</span><span>Ideas total</span></div>
+      <div class="hero-stat"><span>5</span><span>Strategic themes</span></div>
+      <div class="hero-stat"><span>3</span><span>Quick wins ready now</span></div>
+    </div>
+    <div style="margin-top:20px;padding-top:16px;border-top:1px solid rgba(255,255,255,0.15)">
+      <p style="font-size:11px;color:rgba(255,255,255,0.5);margin-bottom:10px;font-weight:600;text-transform:uppercase;letter-spacing:.06em">Strategic category + evidence tag</p>
+      <div style="display:flex;flex-wrap:wrap;gap:6px">
+        <span class="sig sig-c1">🗄️ Knowledge &amp; Data</span>
+        <span class="sig sig-c2">🧪 Model Quality</span>
+        <span class="sig sig-c3">🎙️ Personality &amp; Voice</span>
+        <span class="sig sig-c4">🔌 Workflow Integration</span>
+        <span class="sig sig-c5">⚖️ Legal Intelligence</span>
+        <span class="sig sig-c6">🛠️ Archie Apps</span>
+        <span class="sig sig-c7">🤖 Autonomous Agents</span>
+        <span class="sig sig-user">📣 User Signal</span>
+      </div>
+      <p style="font-size:11px;color:rgba(255,255,255,0.4);margin-top:8px">Each idea is tagged with its strategic category. 📣 User Signal is added when the idea is backed by direct Twine or Slack customer evidence.</p>
+    </div>
+  </div>
+
+  <!-- TOP 10 -->
+  <div class="section">
+    <div class="section-title"><span class="icon" style="background:#ede9ff">🏆</span> Priority Top 10 — Unified Across All Ideas</div>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:20px;line-height:1.7">Ranked across all 30 ideas by impact, evidence strength, effort, and sequencing. H1 items build the trust layer that makes H2 items possible. Some H2 ideas can be prototyped in parallel — where noted.</p>
+
+    <div class="pick-card">
+      <div class="pick-rank h1">1</div>
+      <div class="pick-body">
+        <strong>Partial Analysis Warning Banner</strong>
+        <p>Smallest effort in the entire pool, highest trust-per-hour impact. Users misread partial reads as hallucinations — one banner eliminates this permanently. Ship this week.</p>
+      </div>
+      <div class="pick-meta"><span class="horizon-tag horizon-1" style="margin:0;font-size:10px;padding:3px 8px">H1</span><span class="badge badge-green">S effort ✅</span></div>
+    </div>
+    <div class="signal-row"><span class="sig sig-c1">🗄️ Knowledge &amp; Data</span><span class="sig sig-user">📣 User Signal</span></div>
+
+    <div class="pick-card">
+      <div class="pick-rank h1">2</div>
+      <div class="pick-body">
+        <strong>Chat Session Persistence Layer</strong>
+        <p>Root cause fix for the most-reported escalation. Context loss on navigation is destroying trust in the most engaged users. No downstream improvement lands well while this is broken.</p>
+      </div>
+      <div class="pick-meta"><span class="horizon-tag horizon-1" style="margin:0;font-size:10px;padding:3px 8px">H1</span><span class="badge badge-amber">M effort</span></div>
+    </div>
+    <div class="signal-row"><span class="sig sig-c4">🔌 Workflow Integration</span><span class="sig sig-user">📣 User Signal</span></div>
+
+    <div class="pick-card">
+      <div class="pick-rank h1">3</div>
+      <div class="pick-body">
+        <strong>Smokeball PDF Compatibility Fix</strong>
+        <p>High-frequency, targetable failure. Users generating PDFs via "Print to PDF" from Smokeball hit a known encoding issue — patch this and one of the top frustration sources disappears.</p>
+      </div>
+      <div class="pick-meta"><span class="horizon-tag horizon-1" style="margin:0;font-size:10px;padding:3px 8px">H1</span><span class="badge badge-green">S–M effort ✅</span></div>
+    </div>
+    <div class="signal-row"><span class="sig sig-c1">🗄️ Knowledge &amp; Data</span><span class="sig sig-user">📣 User Signal</span></div>
+
+    <div class="pick-card">
+      <div class="pick-rank h2">4</div>
+      <div class="pick-body">
+        <strong>Archie.md — Persistent Matter Instructions</strong>
+        <p>Highest leverage idea across the full pool. Write once per matter ("we represent the tenant, formal tone, AU spelling") — every Archie interaction inherits it automatically. Transforms Archie from stateless to matter-aware without any AI magic required.</p>
+      </div>
+      <div class="pick-meta"><span class="horizon-tag horizon-2" style="margin:0;font-size:10px;padding:3px 8px">H2</span><span class="badge badge-amber">M effort</span></div>
+    </div>
+    <div class="signal-row"><span class="sig sig-c1">🗄️ Knowledge &amp; Data</span><span class="sig sig-c3">🎙️ Personality &amp; Voice</span><span class="sig sig-user">📣 User Signal</span></div>
+
+    <div class="pick-card">
+      <div class="pick-rank h1">5</div>
+      <div class="pick-body">
+        <strong>"What Archie Read" Transparency Panel</strong>
+        <p>Collapsible panel showing which documents were used, how much was read, and partial-coverage flags. Makes the black box visible — table stakes for professional legal AI and the clearest path to closing the trust gap.</p>
+      </div>
+      <div class="pick-meta"><span class="horizon-tag horizon-1" style="margin:0;font-size:10px;padding:3px 8px">H1</span><span class="badge badge-amber">M effort</span></div>
+    </div>
+    <div class="signal-row"><span class="sig sig-c1">🗄️ Knowledge &amp; Data</span><span class="sig sig-user">📣 User Signal</span></div>
+
+    <div class="pick-card">
+      <div class="pick-rank h2">6</div>
+      <div class="pick-body">
+        <strong>Matter Data API</strong>
+        <p>Low engineering effort, very high unlock value. Exposes structured matter fields (dates, parties, financials) as a queryable API. Foundation for Template Population, Auto-Fill, Scheduled Agents, and Workflow Stage Prompts — build once, enable many.</p>
+      </div>
+      <div class="pick-meta"><span class="horizon-tag horizon-2" style="margin:0;font-size:10px;padding:3px 8px">H2</span><span class="badge badge-green">L effort</span></div>
+    </div>
+    <div class="signal-row"><span class="sig sig-c1">🗄️ Knowledge &amp; Data</span></div>
+
+    <div class="pick-card">
+      <div class="pick-rank h1">7</div>
+      <div class="pick-body">
+        <strong>Eval Pipeline for Output Quality</strong>
+        <p>Without measurement, you can't tell if reliability is improving. Daily sample of real Archie outputs scored for grounding and completeness — enables regression tracking before users notice, and surfaces worst-performing document types.</p>
+      </div>
+      <div class="pick-meta"><span class="horizon-tag horizon-1" style="margin:0;font-size:10px;padding:3px 8px">H1</span><span class="badge badge-amber">Strategic bet</span></div>
+    </div>
+    <div class="signal-row"><span class="sig sig-c2">🧪 Model Quality</span></div>
+
+    <div class="pick-card">
+      <div class="pick-rank h2">8</div>
+      <div class="pick-body">
+        <strong>Template Population — Fill with One Click</strong>
+        <p>Concrete, daily, demonstrable in 30 seconds. Lawyers select a precedent, click "Fill with matter data", Archie maps placeholders to real fields. Eliminates the copy-paste between Smokeball and Word that every user does today.</p>
+      </div>
+      <div class="pick-meta"><span class="horizon-tag horizon-2" style="margin:0;font-size:10px;padding:3px 8px">H2</span><span class="badge badge-amber">M effort</span></div>
+    </div>
+    <div class="signal-row"><span class="sig sig-c5">⚖️ Legal Intelligence</span><span class="sig sig-user">📣 User Signal</span></div>
+
+    <div class="pick-card">
+      <div class="pick-rank h1">9</div>
+      <div class="pick-body">
+        <strong>Matter-Aware Prompt Starter Kit</strong>
+        <p>Auto-suggests 3–5 starting prompts based on matter type and documents present. Kills the cold-start problem and complements the Archie Suggests initiative — reuses the same inference infrastructure.</p>
+      </div>
+      <div class="pick-meta"><span class="horizon-tag horizon-1" style="margin:0;font-size:10px;padding:3px 8px">H1</span><span class="badge badge-green">Leverages sprint ✅</span></div>
+    </div>
+    <div class="signal-row"><span class="sig sig-c5">⚖️ Legal Intelligence</span><span class="sig sig-user">📣 User Signal</span></div>
+
+    <div class="pick-card">
+      <div class="pick-rank h2">10</div>
+      <div class="pick-body">
+        <strong>Plan-First UX — Archie Proposes Before Acting</strong>
+        <p>For complex tasks, Archie presents a numbered plan before executing. User approves or edits. The most important UX pattern for agentic AI in high-stakes domains — builds trust in automation without requiring the agent to be perfect from day one.</p>
+      </div>
+      <div class="pick-meta"><span class="horizon-tag horizon-2" style="margin:0;font-size:10px;padding:3px 8px">H2</span><span class="badge badge-amber">M effort</span></div>
+    </div>
+    <div class="signal-row"><span class="sig sig-c7">🤖 Autonomous Agents</span></div>
+  </div>
+
+  <!-- FULL POOL -->
+  <div class="section" style="margin-top:40px">
+    <div class="section-title"><span class="icon" style="background:#f3f4f6">📋</span> Full Idea Library — All 30 Ideas by Strategic Theme</div>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:4px">Ideas are grouped by what problem they solve, not by who generated them. H1/H2 horizon and effort shown on each card.</p>
+  </div>
+
+  <!-- THEME 1: Reliability -->
+  <div class="section">
+    <div class="section-title" style="font-size:14px"><span class="icon" style="background:#fee2e2">🔧</span> Theme 1 — Reliability &amp; Fixes</div>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:16px">Break/fix issues causing active user frustration. These block trust in everything else.</p>
+    <div class="ideas-grid">
+      <div class="idea-card">
+        <div class="idea-name">Chat Session Persistence Layer</div>
+        <div class="idea-desc">Move chat history from ephemeral in-memory to a persistent server-side session model. Root cause fix for the #1 reported escalation: context loss on navigation.</div>
+        <div class="idea-meta"><span class="horizon-tag horizon-1" style="margin:0;font-size:10px;padding:2px 8px">H1</span><span class="badge badge-red">Impact: H</span><span class="badge badge-amber">Effort: M</span></div>
+        <div class="signal-row"><span class="sig sig-c4">🔌 Workflow Integration</span><span class="sig sig-user">📣 User Signal</span></div>
+      </div>
+      <div class="idea-card">
+        <div class="idea-name">Smokeball PDF Compatibility Fix</div>
+        <div class="idea-desc">Investigate and patch the encoding issue specific to Smokeball-generated PDFs. High-frequency, high-frustration failure with a targetable root cause.</div>
+        <div class="idea-meta"><span class="horizon-tag horizon-1" style="margin:0;font-size:10px;padding:2px 8px">H1</span><span class="badge badge-red">Impact: H</span><span class="badge badge-green">Effort: S–M ✅</span></div>
+        <div class="signal-row"><span class="sig sig-c1">🗄️ Knowledge &amp; Data</span><span class="sig sig-user">📣 User Signal</span></div>
+      </div>
+      <div class="idea-card">
+        <div class="idea-name">Smart Retrieval Freshness Check</div>
+        <div class="idea-desc">Before generating a response, verify retrieved documents haven't changed since last indexed. Re-retrieve if stale. Prevents hallucination from outdated matter context.</div>
+        <div class="idea-meta"><span class="horizon-tag horizon-1" style="margin:0;font-size:10px;padding:2px 8px">H1</span><span class="badge badge-red">Impact: H</span><span class="badge badge-amber">Effort: M</span></div>
+        <div class="signal-row"><span class="sig sig-c2">🧪 Model Quality</span></div>
+      </div>
+      <div class="idea-card">
+        <div class="idea-name">Eval Pipeline for Output Quality</div>
+        <div class="idea-desc">Automated harness sampling real Archie outputs daily, scored for grounding, completeness, and citation coverage. Enables regression tracking and surfaces worst-performing document types.</div>
+        <div class="idea-meta"><span class="horizon-tag horizon-1" style="margin:0;font-size:10px;padding:2px 8px">H1</span><span class="badge badge-red">Impact: H</span><span class="badge badge-amber">Effort: M</span></div>
+        <div class="signal-row"><span class="sig sig-c2">🧪 Model Quality</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- THEME 2: Transparency -->
+  <div class="section">
+    <div class="section-title" style="font-size:14px"><span class="icon" style="background:#fef3c7">👁️</span> Theme 2 — Transparency &amp; Trust</div>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:16px">Make Archie's reasoning and data sources legible. Lawyers can't act on outputs they can't verify.</p>
+    <div class="ideas-grid">
+      <div class="idea-card">
+        <div class="idea-name">Partial Analysis Warning Banner</div>
+        <div class="idea-desc">"⚠️ Only the first 47 pages were analysed — the summary may be incomplete." Clickable to see exact coverage. Tiny implementation, massive trust gain.</div>
+        <div class="idea-meta"><span class="horizon-tag horizon-1" style="margin:0;font-size:10px;padding:2px 8px">H1</span><span class="badge badge-red">Impact: H</span><span class="badge badge-green">Effort: S ✅</span></div>
+        <div class="signal-row"><span class="sig sig-c1">🗄️ Knowledge &amp; Data</span><span class="sig sig-user">📣 User Signal</span></div>
+      </div>
+      <div class="idea-card">
+        <div class="idea-name">Chat Session Continuity Indicator</div>
+        <div class="idea-desc">Persistent header showing active documents and context window state, with a "Restore session" button if context is lost navigating away.</div>
+        <div class="idea-meta"><span class="horizon-tag horizon-1" style="margin:0;font-size:10px;padding:2px 8px">H1</span><span class="badge badge-red">Impact: H</span><span class="badge badge-green">Effort: S–M ✅</span></div>
+        <div class="signal-row"><span class="sig sig-c4">🔌 Workflow Integration</span><span class="sig sig-user">📣 User Signal</span></div>
+      </div>
+      <div class="idea-card">
+        <div class="idea-name">"What Archie Read" Transparency Panel</div>
+        <div class="idea-desc">Collapsible panel listing which documents were used, how much was read, and whether any were partially processed. Lawyers verify grounding before acting on output.</div>
+        <div class="idea-meta"><span class="horizon-tag horizon-1" style="margin:0;font-size:10px;padding:2px 8px">H1</span><span class="badge badge-red">Impact: H</span><span class="badge badge-amber">Effort: M</span></div>
+        <div class="signal-row"><span class="sig sig-c1">🗄️ Knowledge &amp; Data</span><span class="sig sig-user">📣 User Signal</span></div>
+      </div>
+      <div class="idea-card">
+        <div class="idea-name">Reliability Signal per Output</div>
+        <div class="idea-desc">Visible grounding indicator on every response: "Based on 4 documents" or "⚠️ Contains uncertain content — verify before use." Mirrors high-stakes AI tools in medical and financial contexts.</div>
+        <div class="idea-meta"><span class="horizon-tag horizon-1" style="margin:0;font-size:10px;padding:2px 8px">H1</span><span class="badge badge-red">Impact: H</span><span class="badge badge-amber">Effort: M</span></div>
+        <div class="signal-row"><span class="sig sig-c1">🗄️ Knowledge &amp; Data</span><span class="sig sig-user">📣 User Signal</span></div>
+      </div>
+      <div class="idea-card">
+        <div class="idea-name">Document Processing Status API</div>
+        <div class="idea-desc">Structured per-document status: pages read, extraction confidence, format compatibility flag. Powers the Warning Banner, Session Indicator, and internal health dashboard — one API, many surfaces.</div>
+        <div class="idea-meta"><span class="horizon-tag horizon-1" style="margin:0;font-size:10px;padding:2px 8px">H1</span><span class="badge badge-red">Impact: H</span><span class="badge badge-amber">Effort: M</span></div>
+        <div class="signal-row"><span class="sig sig-c1">🗄️ Knowledge &amp; Data</span></div>
+      </div>
+      <div class="idea-card">
+        <div class="idea-name">Archie Health Dashboard (Internal)</div>
+        <div class="idea-desc">PM/CS dashboard showing regeneration rate, partial-analysis events, upload failure rate, and chat history loss per firm. Proactive issue detection before users escalate or churn.</div>
+        <div class="idea-meta"><span class="horizon-tag horizon-1" style="margin:0;font-size:10px;padding:2px 8px">H1</span><span class="badge badge-red">Impact: H</span><span class="badge badge-amber">Effort: M</span></div>
+        <div class="signal-row"><span class="sig sig-c2">🧪 Model Quality</span></div>
+      </div>
+      <div class="idea-card">
+        <div class="idea-name">Matter Context Panel — What Archie Knows</div>
+        <div class="idea-desc">A persistent sidebar showing: active instructions for this matter, documents indexed, similar matters detected, and last agent activity. Makes Archie's "mental state" visible before every interaction.</div>
+        <div class="idea-meta"><span class="horizon-tag horizon-2" style="margin:0;font-size:10px;padding:2px 8px">H2</span><span class="badge badge-red">Impact: H</span><span class="badge badge-amber">Effort: M</span></div>
+        <div class="signal-row"><span class="sig sig-c4">🔌 Workflow Integration</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- THEME 3: Context & Memory -->
+  <div class="section">
+    <div class="section-title" style="font-size:14px"><span class="icon" style="background:#dbeafe">🧠</span> Theme 3 — Context &amp; Matter Memory</div>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:16px">Give Archie persistent knowledge of the matter, the firm, and the lawyer's preferences — so every interaction starts informed.</p>
+    <div class="ideas-grid">
+      <div class="idea-card">
+        <div class="idea-name">Archie.md — Persistent Matter Instructions</div>
+        <div class="idea-desc">A per-matter instruction file the lawyer edits once: "We represent the tenant. Formal tone. AU spelling." Archie applies it automatically across every interaction in that matter — no re-prompting required.</div>
+        <div class="idea-meta"><span class="horizon-tag horizon-2" style="margin:0;font-size:10px;padding:2px 8px">H2</span><span class="badge badge-red">Impact: H</span><span class="badge badge-amber">Effort: M</span></div>
+        <div class="signal-row"><span class="sig sig-c1">🗄️ Knowledge &amp; Data</span><span class="sig sig-c3">🎙️ Personality &amp; Voice</span><span class="sig sig-user">📣 User Signal</span></div>
+      </div>
+      <div class="idea-card">
+        <div class="idea-name">Matter Instruction Store (Backend)</div>
+        <div class="idea-desc">Per-matter system prompts stored server-side, versioned, and injected automatically into every LLM call for that matter. The technical foundation for Archie.md and all future instruction-layering features.</div>
+        <div class="idea-meta"><span class="horizon-tag horizon-2" style="margin:0;font-size:10px;padding:2px 8px">H2</span><span class="badge badge-red">Impact: H</span><span class="badge badge-amber">Effort: M</span></div>
+        <div class="signal-row"><span class="sig sig-c1">🗄️ Knowledge &amp; Data</span></div>
+      </div>
+      <div class="idea-card">
+        <div class="idea-name">Matter Data API</div>
+        <div class="idea-desc">Expose structured matter fields (layouts, dates, parties, financials) as an API Archie can query at runtime. Unlocks operational queries impossible today and enables Template Population, Auto-Fill, and Scheduled Agents.</div>
+        <div class="idea-meta"><span class="horizon-tag horizon-2" style="margin:0;font-size:10px;padding:2px 8px">H2</span><span class="badge badge-red">Impact: H</span><span class="badge badge-green">Effort: L</span></div>
+        <div class="signal-row"><span class="sig sig-c1">🗄️ Knowledge &amp; Data</span></div>
+      </div>
+      <div class="idea-card">
+        <div class="idea-name">Auto-Fill Matter from Intake Documents</div>
+        <div class="idea-desc">When a new client brings a retainer, court order, or prior firm documents, Archie reads it and pre-populates matter fields (parties, dates, matter type, value). Eliminates the most error-prone manual step at client intake.</div>
+        <div class="idea-meta"><span class="horizon-tag horizon-2" style="margin:0;font-size:10px;padding:2px 8px">H2</span><span class="badge badge-red">Impact: H</span><span class="badge badge-amber">Effort: M</span></div>
+        <div class="signal-row"><span class="sig sig-c5">⚖️ Legal Intelligence</span><span class="sig sig-user">📣 User Signal</span></div>
+      </div>
+      <div class="idea-card">
+        <div class="idea-name">Cross-Matter Semantic Index</div>
+        <div class="idea-desc">Vector index covering all matters in a firm — not just the open one. Foundation for cross-matter search, precedent recall, and agents that learn from the firm's document history over time.</div>
+        <div class="idea-meta"><span class="horizon-tag horizon-2" style="margin:0;font-size:10px;padding:2px 8px">H2</span><span class="badge badge-red">Impact: H</span><span class="badge badge-green">Effort: L</span></div>
+        <div class="signal-row"><span class="sig sig-c1">🗄️ Knowledge &amp; Data</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- THEME 4: Activation & Discoverability -->
+  <div class="section">
+    <div class="section-title" style="font-size:14px"><span class="icon" style="background:#dcfce7">🚀</span> Theme 4 — Activation &amp; Discoverability</div>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:16px">Get new users to first value faster, and keep existing users discovering Archie's capabilities.</p>
+    <div class="ideas-grid">
+      <div class="idea-card">
+        <div class="idea-name">Matter-Aware Prompt Starter Kit</div>
+        <div class="idea-desc">Auto-suggest 3–5 starting prompts based on matter type (Family Law, Property, Employment) and documents present. Removes the cold-start blank-slate problem. Reuses Archie Suggestions infrastructure from the current sprint.</div>
+        <div class="idea-meta"><span class="horizon-tag horizon-1" style="margin:0;font-size:10px;padding:2px 8px">H1</span><span class="badge badge-red">Impact: H</span><span class="badge badge-amber">Effort: M</span></div>
+        <div class="signal-row"><span class="sig sig-c5">⚖️ Legal Intelligence</span><span class="sig sig-user">📣 User Signal</span></div>
+      </div>
+      <div class="idea-card">
+        <div class="idea-name">Guided Onboarding — First Value in 3 Clicks</div>
+        <div class="idea-desc">First-use flow delivering one meaningful outcome within 3 interactions. Personalised by practice area with real matter context pre-filled. Addresses the "I tried it once and stopped" churn pattern.</div>
+        <div class="idea-meta"><span class="horizon-tag horizon-1" style="margin:0;font-size:10px;padding:2px 8px">H1</span><span class="badge badge-red">Impact: H</span><span class="badge badge-amber">Effort: M</span></div>
+        <div class="signal-row"><span class="sig sig-c4">🔌 Workflow Integration</span><span class="sig sig-user">📣 User Signal</span></div>
+      </div>
+      <div class="idea-card">
+        <div class="idea-name">Prompt Confidence Builder</div>
+        <div class="idea-desc">Real-time feedback as user types: "This will search 5 documents" / "Add a timeframe to narrow results." Turns prompt creation from guesswork into guided dialogue for less technical users.</div>
+        <div class="idea-meta"><span class="horizon-tag horizon-1" style="margin:0;font-size:10px;padding:2px 8px">H1</span><span class="badge badge-red">Impact: H</span><span class="badge badge-amber">Effort: M</span></div>
+        <div class="signal-row"><span class="sig sig-c4">🔌 Workflow Integration</span><span class="sig sig-user">📣 User Signal</span></div>
+      </div>
+      <div class="idea-card">
+        <div class="idea-name">Smart Suggestion Chips (Post-Response)</div>
+        <div class="idea-desc">After every response: "Create task from this", "Draft into Word", "Save as precedent". Reduces blank-slate paralysis after receiving output and drives deeper engagement per session.</div>
+        <div class="idea-meta"><span class="horizon-tag horizon-1" style="margin:0;font-size:10px;padding:2px 8px">H1</span><span class="badge badge-red">Impact: H</span><span class="badge badge-amber">Effort: M</span></div>
+        <div class="signal-row"><span class="sig sig-c5">⚖️ Legal Intelligence</span><span class="sig sig-user">📣 User Signal</span></div>
+      </div>
+      <div class="idea-card">
+        <div class="idea-name">Archie Firm Mode — Beyond the Matter</div>
+        <div class="idea-desc">A general workspace not tied to a single matter: draft a staff policy, summarise a CPD article, search across all matters. Reduces leakage to ChatGPT and increases Archie's daily active surface area.</div>
+        <div class="idea-meta"><span class="horizon-tag horizon-2" style="margin:0;font-size:10px;padding:2px 8px">H2</span><span class="badge badge-red">Impact: H</span><span class="badge badge-green">Effort: L–M</span></div>
+        <div class="signal-row"><span class="sig sig-c4">🔌 Workflow Integration</span><span class="sig sig-user">📣 User Signal</span></div>
+      </div>
+      <div class="idea-card">
+        <div class="idea-name">Progressive Trust Indicators</div>
+        <div class="idea-desc">"You've successfully used Archie for 12 tasks this month." Builds habit formation signals based on actual usage history and reinforces confidence over time — particularly useful for reluctant adopters.</div>
+        <div class="idea-meta"><span class="horizon-tag horizon-1" style="margin:0;font-size:10px;padding:2px 8px">H1</span><span class="badge badge-blue">Impact: M</span><span class="badge badge-amber">Effort: M</span></div>
+        <div class="signal-row"><span class="sig sig-c4">🔌 Workflow Integration</span><span class="sig sig-user">📣 User Signal</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- THEME 5: Agentic & Scale -->
+  <div class="section">
+    <div class="section-title" style="font-size:14px"><span class="icon" style="background:#ede9ff">🤖</span> Theme 5 — Agentic &amp; Scale</div>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:16px">Archie acts across matters and without prompting. These require the H1 trust layer to be in place before users will accept autonomous actions.</p>
+    <div class="ideas-grid">
+      <div class="idea-card">
+        <div class="idea-name">Plan-First UX — Archie Proposes Before Acting</div>
+        <div class="idea-desc">For complex tasks, Archie presents a numbered plan before executing: "I'll: 1) Read the docs, 2) Extract key facts, 3) Structure the draft. Shall I proceed?" User edits or approves. Builds confidence in agents without requiring perfection.</div>
+        <div class="idea-meta"><span class="horizon-tag horizon-2" style="margin:0;font-size:10px;padding:2px 8px">H2</span><span class="badge badge-red">Impact: H</span><span class="badge badge-amber">Effort: M</span></div>
+        <div class="signal-row"><span class="sig sig-c7">🤖 Autonomous Agents</span></div>
+      </div>
+      <div class="idea-card">
+        <div class="idea-name">Template Population — Fill with One Click</div>
+        <div class="idea-desc">User selects a precedent, clicks "Fill with matter data", and Archie maps placeholders (client name, settlement date, matter value) to real structured data. Eliminates daily copy-paste between Smokeball and Word.</div>
+        <div class="idea-meta"><span class="horizon-tag horizon-2" style="margin:0;font-size:10px;padding:2px 8px">H2</span><span class="badge badge-red">Impact: H</span><span class="badge badge-amber">Effort: M</span></div>
+        <div class="signal-row"><span class="sig sig-c5">⚖️ Legal Intelligence</span><span class="sig sig-user">📣 User Signal</span></div>
+      </div>
+      <div class="idea-card">
+        <div class="idea-name">Workflow Stage Prompt — Archie Initiates</div>
+        <div class="idea-desc">When a matter changes stage (e.g. Discovery → Negotiation), Archie surfaces contextual suggestions: "Want me to draft a settlement proposal or review the other side's documents?" No user configuration — just event hooks.</div>
+        <div class="idea-meta"><span class="horizon-tag horizon-2" style="margin:0;font-size:10px;padding:2px 8px">H2</span><span class="badge badge-red">Impact: H</span><span class="badge badge-amber">Effort: M</span></div>
+        <div class="signal-row"><span class="sig sig-c5">⚖️ Legal Intelligence</span><span class="sig sig-c7">🤖 Autonomous Agents</span></div>
+      </div>
+      <div class="idea-card">
+        <div class="idea-name">Cross-Matter Search — "I've done this before"</div>
+        <div class="idea-desc">Semantic search across all the firm's matters: "find a settlement deed similar to this one from a previous matter." Ranked results with excerpts and direct links. First step toward institutional memory for the firm.</div>
+        <div class="idea-meta"><span class="horizon-tag horizon-2" style="margin:0;font-size:10px;padding:2px 8px">H2</span><span class="badge badge-red">Impact: H</span><span class="badge badge-amber">Effort: M–L</span></div>
+        <div class="signal-row"><span class="sig sig-c1">🗄️ Knowledge &amp; Data</span><span class="sig sig-user">📣 User Signal</span></div>
+      </div>
+      <div class="idea-card">
+        <div class="idea-name">Folder-Aware Search — Scoped by Structure</div>
+        <div class="idea-desc">"Search only within /Expert Reports." Archie respects the folder hierarchy as retrieval scope. Critical for matters with hundreds of documents where folder structure itself carries legal meaning.</div>
+        <div class="idea-meta"><span class="horizon-tag horizon-2" style="margin:0;font-size:10px;padding:2px 8px">H2</span><span class="badge badge-red">Impact: H</span><span class="badge badge-amber">Effort: M–L</span></div>
+        <div class="signal-row"><span class="sig sig-c1">🗄️ Knowledge &amp; Data</span><span class="sig sig-user">📣 User Signal</span></div>
+      </div>
+      <div class="idea-card">
+        <div class="idea-name">Workflow Event Hooks</div>
+        <div class="idea-desc">Internal webhooks that notify Archie when matter events occur: stage change, new document added, deadline approaching, AML check pending. Archie reacts to events instead of waiting — foundation for all proactive automation.</div>
+        <div class="idea-meta"><span class="horizon-tag horizon-2" style="margin:0;font-size:10px;padding:2px 8px">H2</span><span class="badge badge-red">Impact: H</span><span class="badge badge-amber">Effort: M–L</span></div>
+        <div class="signal-row"><span class="sig sig-c7">🤖 Autonomous Agents</span></div>
+      </div>
+      <div class="idea-card">
+        <div class="idea-name">Scheduled Agents — Archie Works While You Don't</div>
+        <div class="idea-desc">User-configured recurring automations: "Every Sunday, send a summary of active matters with this week's deadlines." Archie runs without being prompted. Requires Background Agent Scheduler infrastructure first.</div>
+        <div class="idea-meta"><span class="horizon-tag horizon-2" style="margin:0;font-size:10px;padding:2px 8px">H2</span><span class="badge badge-red">Impact: H</span><span class="badge badge-gray">Effort: XL</span></div>
+        <div class="signal-row"><span class="sig sig-c7">🤖 Autonomous Agents</span></div>
+      </div>
+      <div class="idea-card">
+        <div class="idea-name">Background Agent Job Scheduler</div>
+        <div class="idea-desc">Infrastructure for agents running outside active sessions: scheduler, worker queue, retry logic, rate limits, permissions, and observability. Unlocks all recurring automation use cases — build once, enables Scheduled Agents and beyond.</div>
+        <div class="idea-meta"><span class="horizon-tag horizon-2" style="margin:0;font-size:10px;padding:2px 8px">H2</span><span class="badge badge-red">Impact: H</span><span class="badge badge-gray">Effort: XL</span></div>
+        <div class="signal-row"><span class="sig sig-c7">🤖 Autonomous Agents</span></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ===================== DISCOVER ===================== -->
+<div id="page-discover" class="page">
+
+  <div class="hero">
+    <h1>Discovery Plan — Trust, Reliability & Activation</h1>
+    <p>What is the fastest path to making Archie reliable enough that engaged users recommend it and new users adopt it daily — without competing with the active Spark 2026 sprint?</p>
+    <div class="hero-meta">
+      <div class="hero-stat"><span>5</span><span>Ideas stress-tested</span></div>
+      <div class="hero-stat"><span>8</span><span>Critical assumptions</span></div>
+      <div class="hero-stat"><span>5</span><span>Experiments designed</span></div>
+      <div class="hero-stat"><span>4 weeks</span><span>Discovery timeline</span></div>
+    </div>
+  </div>
+
+  <!-- Assumptions -->
+  <div class="section">
+    <div class="section-title"><span class="icon" style="background:#fee2e2">🎯</span> Critical Assumptions — Prioritised by Impact × Uncertainty</div>
+
+    <div class="priority-label">🔴 Leap of Faith — Test before building anything</div>
+    <div class="assumption-item high">
+      <div class="assumption-text">Showing a limitation warning will <em>increase</em> user trust rather than undermine confidence in Archie</div>
+      <div class="assumption-meta">Idea 2 — Warning Banner · Value · Impact: H · Uncertainty: H → <strong>Test with user research first</strong></div>
+    </div>
+    <div class="assumption-item high">
+      <div class="assumption-text">An automated judge model can score legal AI outputs in a way that correlates with lawyer-perceived quality</div>
+      <div class="assumption-meta">Idea 4 — Eval Pipeline · Feasibility · Impact: H · Uncertainty: H → <strong>Calibration study before pipeline investment</strong></div>
+    </div>
+    <div class="assumption-item high">
+      <div class="assumption-text">Users will click on contextual prompt suggestions rather than ignoring them</div>
+      <div class="assumption-meta">Idea 5 — Prompt Starter Kit · Value · Impact: H · Uncertainty: H → <strong>Fake door / A/B test</strong></div>
+    </div>
+
+    <div class="priority-label">🟡 Medium Risk — Spike to confirm</div>
+    <div class="assumption-item medium">
+      <div class="assumption-text">The root cause of chat history loss is ephemeral in-memory storage (not auth session expiry or a deeper state management bug)</div>
+      <div class="assumption-meta">Idea 1 — Persistence Layer · Feasibility · Impact: H · Uncertainty: M → <strong>3-day engineering spike</strong></div>
+    </div>
+    <div class="assumption-item medium">
+      <div class="assumption-text">Lawyers will actively open and use a transparency panel rather than scrolling past it</div>
+      <div class="assumption-meta">Idea 3 — Transparency Panel · Value · Impact: H · Uncertainty: M → <strong>Prototype + user test</strong></div>
+    </div>
+
+    <div class="priority-label">🟢 Low Risk — Confirmed, proceed</div>
+    <div class="assumption-item low">
+      <div class="assumption-text">Partial analysis is frequent enough to justify the warning pattern</div>
+      <div class="assumption-meta">Confirmed by Twine data — proceed</div>
+    </div>
+    <div class="assumption-item low">
+      <div class="assumption-text">Matter type can be reliably detected from Smokeball data to serve relevant prompts</div>
+      <div class="assumption-meta">Smokeball has structured matter data — proceed</div>
+    </div>
+    <div class="assumption-item low">
+      <div class="assumption-text">Data retention policies won't block server-side chat persistence</div>
+      <div class="assumption-meta">Check with legal/compliance — likely fine</div>
+    </div>
+  </div>
+
+  <!-- Experiments -->
+  <div class="section">
+    <div class="section-title"><span class="icon" style="background:#dbeafe">🧪</span> Validation Experiments</div>
+
+    <div class="exp-card open" id="exp-e1">
+      <div class="exp-header" onclick="toggleExp('exp-e1')">
+        <div class="exp-code">E1</div>
+        <div class="exp-header-body">
+          <strong>Warning Banner Trust Test</strong>
+          <span>Does showing a limitation warning increase or decrease trust? · Week 1 · S effort</span>
+        </div>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="exp-body">
+        <h4>Hypothesis</h4>
+        <p>≥80% of lawyers who see a partial-analysis warning will say it makes them <em>more</em> confident in Archie's outputs, not less.</p>
+        <h4>Setup</h4>
+        <ul>
+          <li>Two Figma prototypes: (A) current response with no warning, (B) same response with banner "⚠️ Only 34 of 87 pages were analysed"</li>
+          <li>Recruit 5–8 lawyers from current Archie users (AU/US mix)</li>
+          <li>Moderated 20-min sessions — show both variants, ask "How does this affect your trust?"</li>
+        </ul>
+        <h4>Decision Criteria</h4>
+        <ul>
+          <li>≥4/5 prefer the warning → ship the banner, proceed to E5</li>
+          <li>&lt;3/5 prefer it → reframe as positive source indicator, retest before building</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="exp-card" id="exp-e2">
+      <div class="exp-header" onclick="toggleExp('exp-e2')">
+        <div class="exp-code">E2</div>
+        <div class="exp-header-body">
+          <strong>Eval Pipeline Calibration Study</strong>
+          <span>Can automated scoring correlate with lawyer quality perception? · Week 2–3 · M effort</span>
+        </div>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="exp-body">
+        <h4>Hypothesis</h4>
+        <p>A judge-model eval harness can score Archie's legal outputs with Spearman ρ > 0.65 vs. lawyer ratings.</p>
+        <h4>Setup</h4>
+        <ul>
+          <li>Sample 50 recent Archie responses from non-confidential test matters</li>
+          <li>2 lawyers independently rate each on 1–5: factual accuracy, completeness, relevance</li>
+          <li>Run same 50 through Claude Opus with a legal accuracy rubric</li>
+          <li>Calculate Spearman correlation</li>
+        </ul>
+        <h4>Decision Criteria</h4>
+        <ul>
+          <li>ρ > 0.65 → build full pipeline with daily sampling</li>
+          <li>ρ 0.4–0.65 → iterate rubric before scaling</li>
+          <li>ρ &lt; 0.4 → use regeneration rate + copy-rate as quality proxies instead</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="exp-card" id="exp-e3">
+      <div class="exp-header" onclick="toggleExp('exp-e3')">
+        <div class="exp-code">E3</div>
+        <div class="exp-header-body">
+          <strong>Contextual Prompt Suggestions A/B Test</strong>
+          <span>Will users click matter-aware prompts? · Week 1–2 · S–M effort</span>
+        </div>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="exp-body">
+        <h4>Hypothesis</h4>
+        <p>>25% of new users who see matter-aware prompt suggestions will click one in their first session (vs. &lt;10% from blank box).</p>
+        <h4>Setup</h4>
+        <ul>
+          <li>Leverage existing Archie Suggestions infrastructure (in current sprint)</li>
+          <li>Variant A: current blank-start · Variant B: 3 pre-populated prompts by matter type</li>
+          <li>Run 2 weeks on new users only · Measure: first-session click rate + 7-day return rate</li>
+        </ul>
+        <h4>Decision Criteria</h4>
+        <ul>
+          <li>Click rate >25% → accelerate full Matter-Aware Starter Kit</li>
+          <li>Click rate &lt;15% → investigate prompt relevance, retest with more targeted content</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="exp-card" id="exp-e4">
+      <div class="exp-header" onclick="toggleExp('exp-e4')">
+        <div class="exp-code">E4</div>
+        <div class="exp-header-body">
+          <strong>Chat History Root Cause Spike</strong>
+          <span>Is the bug in-memory storage? · Week 1 · S effort — start Monday</span>
+        </div>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="exp-body">
+        <h4>Hypothesis</h4>
+        <p>Chat history loss is caused by ephemeral in-memory session storage that clears on navigation between Chat and Legal Research — fixable with server-side persistence.</p>
+        <h4>Setup</h4>
+        <ul>
+          <li>3-day engineering spike: instrument session state lifecycle</li>
+          <li>Reproduce the exact navigation flow: Chat → Legal Research → back to Chat</li>
+          <li>Document: trigger, storage mechanism, estimated fix effort</li>
+        </ul>
+        <h4>Decision Criteria</h4>
+        <ul>
+          <li>In-memory confirmed → scope persistence layer fix for next sprint</li>
+          <li>Deeper issue (auth expiry, state management bug) → full engineering assessment</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="exp-card" id="exp-e5">
+      <div class="exp-header" onclick="toggleExp('exp-e5')">
+        <div class="exp-code">E5</div>
+        <div class="exp-header-body">
+          <strong>Transparency Panel User Test</strong>
+          <span>Will lawyers open the panel unprompted? · Week 2 · M effort</span>
+        </div>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="exp-body">
+        <h4>Hypothesis</h4>
+        <p>≥3 of 5 lawyers will open the "What Archie Read" panel unprompted and describe it as useful or trust-increasing.</p>
+        <h4>Setup</h4>
+        <ul>
+          <li>Figma prototype: expandable panel below each response (doc names, pages read, coverage %)</li>
+          <li>5 lawyers across 2–3 firm sizes · Unmoderated test (Maze or UserTesting)</li>
+          <li>Observe whether panel is opened naturally; follow up "Was this useful?"</li>
+        </ul>
+        <h4>Decision Criteria</h4>
+        <ul>
+          <li>≥3/5 open unprompted + rate useful → build full Transparency Panel</li>
+          <li>&lt;3/5 open it → ship simpler "Based on 4 documents" inline signal, defer full panel</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Timeline -->
+  <div class="section">
+    <div class="section-title"><span class="icon" style="background:#fce7f3">📅</span> 4-Week Discovery Timeline</div>
+    <div class="timeline">
+      <div class="timeline-week">
+        <div class="week-label">Week 1</div>
+        <p><strong>E4</strong> — Engineering spike (chat history root cause)<br><strong>E1</strong> — Recruit + run warning banner user test<br><strong>E3</strong> — A/B setup (inside current sprint)</p>
+      </div>
+      <div class="timeline-week">
+        <div class="week-label">Week 2</div>
+        <p><strong>E1</strong> — Analysis + decision<br><strong>E3</strong> — Running<br><strong>E5</strong> — Prototype + recruit lawyers<br><strong>E2</strong> — Output sampling + lawyer recruitment</p>
+      </div>
+      <div class="timeline-week">
+        <div class="week-label">Week 3</div>
+        <p><strong>E2</strong> — Calibration study<br><strong>E5</strong> — User tests<br><strong>E3</strong> — Results analysis</p>
+      </div>
+      <div class="timeline-week">
+        <div class="week-label">Week 4</div>
+        <p><strong>Synthesis</strong> — All results → sprint planning input for T4/FY27</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Decision Framework -->
+  <div class="section">
+    <div class="section-title"><span class="icon" style="background:#d1fae5">⚖️</span> Decision Framework</div>
+    <div class="card" style="padding: 8px 20px;">
+      <div class="decision-row"><div class="decision-if">E1 → warnings increase trust</div><div class="decision-then">→ Ship Partial Analysis Banner; build Transparency Panel</div></div>
+      <div class="decision-row"><div class="decision-if">E1 → warnings decrease trust</div><div class="decision-then">→ Reframe as positive source indicator; retest before building</div></div>
+      <div class="decision-row"><div class="decision-if">E2 → eval correlates with quality (ρ > 0.65)</div><div class="decision-then">→ Build full pipeline; instrument daily sampling</div></div>
+      <div class="decision-row"><div class="decision-if">E2 → eval doesn't correlate</div><div class="decision-then">→ Use regeneration rate + copy-rate as quality proxies instead</div></div>
+      <div class="decision-row"><div class="decision-if">E3 → suggestions clicked >25%</div><div class="decision-then">→ Accelerate full Matter-Aware Starter Kit</div></div>
+      <div class="decision-row"><div class="decision-if">E3 → suggestions ignored</div><div class="decision-then">→ Investigate prompt relevance; retest with more targeted content</div></div>
+      <div class="decision-row"><div class="decision-if">E4 → in-memory storage confirmed</div><div class="decision-then">→ Scope persistence layer fix for next sprint</div></div>
+      <div class="decision-row"><div class="decision-if">E4 → deeper architectural issue</div><div class="decision-then">→ Full engineering assessment before committing to timeline</div></div>
+      <div class="decision-row"><div class="decision-if">E5 → panel opened unprompted</div><div class="decision-then">→ Build full Transparency Panel</div></div>
+      <div class="decision-row"><div class="decision-if">E5 → panel ignored</div><div class="decision-then">→ Ship simpler "Based on N documents" inline signal instead</div></div>
+    </div>
+  </div>
+
+  <!-- What this informs -->
+  <div class="section">
+    <div class="section-title"><span class="icon" style="background:#ede9ff">🔗</span> What This Discovery Informs</div>
+    <div class="insight-list">
+      <div class="insight-item"><div class="insight-num">→</div><div class="insight-body"><strong>T4 sprint planning</strong> <span>— which trust/reliability features to prioritise and size</span></div></div>
+      <div class="insight-item"><div class="insight-num">→</div><div class="insight-body"><strong>FY27 roadmap</strong> <span>— whether to invest in the full eval pipeline and transparency infrastructure</span></div></div>
+      <div class="insight-item"><div class="insight-num">→</div><div class="insight-body"><strong>Archie Suggestions (current sprint)</strong> <span>— E3 can run as a lightweight variant within existing delivery</span></div></div>
+      <div class="insight-item"><div class="insight-num">→</div><div class="insight-body"><strong>Escalation prioritisation</strong> <span>— E4 spike gives engineering a root cause to act on immediately (start Monday)</span></div></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  function showSub(id, tab) {
+    document.querySelectorAll('.sub-page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.sub-tab').forEach(t => t.classList.remove('active'));
+    document.getElementById('sub-' + id).classList.add('active');
+    tab.classList.add('active');
+  }
+
+  function showPage(id, tab) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+    document.getElementById('page-' + id).classList.add('active');
+    tab.classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function toggleExp(id) {
+    document.getElementById(id).classList.toggle('open');
+  }
+</script>
+</body>
+</html>
